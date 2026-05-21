@@ -1,0 +1,193 @@
+<!-- A11y: role=dialog + aria-label + aria-modal for screen readers -->
+<div class="mobile-menu drawer" data-mobile-menu role="dialog" aria-label="Mobile navigation menu" aria-modal="true">
+  <div class="drawer__header">
+    <span class="brand-name">{{ shop.name }}</span>
+    <!-- A11y: descriptive aria-label for close button -->
+    <button class="drawer__close" data-mobile-menu-close aria-label="Close mobile menu">
+      {% render 'icon-close' %}
+    </button>
+  </div>
+
+  <div class="drawer__body">
+    <nav class="mobile-menu__nav" role="navigation" aria-label="Mobile navigation">
+      <ul class="mobile-menu__list">
+        {%- for link in section.settings.menu.links -%}
+          <li class="mobile-menu__item{% if link.active %} is-active{% endif %}">
+            {%- if link.links.size > 0 -%}
+              <div class="mobile-menu__link-wrapper">
+                <a href="{{ link.url }}" class="mobile-menu__link">{{ link.title }}</a>
+                {%- comment -%} Toggles should be strictly limited to the arrow area {%- endcomment -%}
+                <button class="mobile-menu__submenu-toggle" data-submenu-trigger="{{ forloop.index }}" aria-label="Open {{ link.title }} submenu">
+                  {% render 'icon-arrow' %}
+                </button>
+              </div>
+
+              <div class="mobile-menu__submenu" data-submenu-panel="{{ forloop.index }}">
+                <!-- A11y: aria-label for icon-only back button -->
+                <button class="mobile-menu__back" data-submenu-back aria-label="Back to {{ link.title }}">
+                  {% render 'icon-arrow' %}
+                  <span>{{ link.title }}</span>
+                </button>
+                <ul class="mobile-menu__submenu-list">
+                  <li>
+                    <a href="{{ link.url }}" class="mobile-menu__submenu-link mobile-menu__submenu-link--view-all">
+                      {{ 'actions.view_all' | t }} {{ link.title }}
+                    </a>
+                  </li>
+                  {%- for child_link in link.links -%}
+                    <li>
+                      <a href="{{ child_link.url }}" class="mobile-menu__submenu-link">{{ child_link.title }}</a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </div>
+            {%- else -%}
+              <a href="{{ link.url }}" class="mobile-menu__link">{{ link.title }}</a>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+
+        <!-- Hardcoded Mock Links for Preview -->
+        <li class="mobile-menu__item"><a href="our-story.html" class="mobile-menu__link">Our Story</a></li>
+        <li class="mobile-menu__item"><a href="faq.html" class="mobile-menu__link">FAQ</a></li>
+        <li class="mobile-menu__item"><a href="contact.html" class="mobile-menu__link">Contact Us</a></li>
+      </ul>
+    </nav>
+
+    {%- comment -%} Removed wishlist and profile icons per user request {%- endcomment -%}
+  </div>
+</div>
+<div class="overlay" data-mobile-menu-overlay></div>
+
+<style>
+  .mobile-menu__list {
+    list-style: none;
+  }
+  .mobile-menu__item {
+    border-bottom: 1px solid var(--color-pearl);
+  }
+  .mobile-menu__link-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .mobile-menu__link {
+    display: block;
+    padding: var(--space-md) 0;
+    font-size: var(--text-base);
+    font-weight: var(--font-medium);
+    color: var(--color-charcoal);
+    flex: 1;
+  }
+  .mobile-menu__link:hover,
+  .mobile-menu__item.is-active .mobile-menu__link {
+    color: var(--color-gold);
+  }
+  .mobile-menu__submenu-toggle {
+    background: none;
+    border: none;
+    padding: var(--space-md);
+    color: var(--color-charcoal);
+    cursor: pointer;
+    z-index: 2; /* Keep above link but limited to right side */
+    width: 60px; /* Fixed width for predictable toggle area */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .mobile-menu__submenu-toggle svg {
+    transform: rotate(-90deg);
+  }
+  [dir="rtl"] .mobile-menu__submenu-toggle svg {
+    transform: rotate(90deg);
+  }
+  .mobile-menu__submenu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--color-ivory);
+    transform: translateX(100%);
+    transition: transform var(--transition-base);
+    overflow-y: auto;
+    padding: var(--space-xl);
+  }
+  [dir="rtl"] .mobile-menu__submenu {
+    transform: translateX(-100%);
+  }
+  .mobile-menu__submenu.is-active {
+    transform: translateX(0);
+  }
+  .mobile-menu__back {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    background: none;
+    border: none;
+    padding: var(--space-md) 0;
+    font-size: var(--text-sm);
+    font-weight: var(--font-semibold);
+    color: var(--color-gold);
+    cursor: pointer;
+    margin-bottom: var(--space-md);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .mobile-menu__back svg {
+    transform: rotate(90deg);
+  }
+  [dir="rtl"] .mobile-menu__back svg {
+    transform: rotate(-90deg);
+  }
+  .mobile-menu__submenu-list {
+    list-style: none;
+  }
+  .mobile-menu__submenu-link {
+    display: block;
+    padding: var(--space-sm) 0;
+    font-size: var(--text-base);
+    color: var(--color-charcoal);
+  }
+  .mobile-menu__submenu-link--view-all {
+    font-weight: var(--font-semibold);
+    color: var(--color-gold);
+    margin-bottom: var(--space-sm);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--color-pearl);
+  }
+  .mobile-menu__footer {
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--color-pearl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+  .mobile-menu__footer-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    color: var(--color-charcoal);
+  }
+  @media (min-width: 1024px) {
+    .mobile-menu,
+    [data-mobile-menu-overlay] { display: none; }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Mobile Menu",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu"
+    }
+  ]
+}
+{% endschema %}

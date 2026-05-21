@@ -1,0 +1,32 @@
+{
+  "sections": {
+    "brand-hero": {
+      "type": "brand-collection-hero",
+      "settings": {
+        "show_subtitle": true,
+        "subtitle_text": "Brand Collection",
+        "show_description": true,
+        "text_alignment": "center",
+        "padding_top": 60,
+        "padding_bottom": 30
+      }
+    },
+    "filter-drawer": {
+      "type": "filter-drawer",
+      "settings": {}
+    },
+    "collection-grid": {
+      "type": "collection-grid",
+      "settings": {
+        "products_per_page": 16,
+        "columns": "4",
+        "show_gender_filter": true
+      }
+    }
+  },
+  "order": [
+    "brand-hero",
+    "filter-drawer",
+    "collection-grid"
+  ]
+}

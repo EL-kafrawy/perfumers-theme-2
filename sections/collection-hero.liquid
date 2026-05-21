@@ -1,0 +1,89 @@
+<section class="collection-hero section--flush" data-section-id="{{ section.id }}">
+  <div class="collection-hero__wrapper">
+    {%- if collection.image -%}
+      <img
+        src="{{ collection.image | image_url: width: 1440 }}"
+        alt="{{ collection.title | escape }}"
+        class="collection-hero__image"
+        loading="eager"
+      >
+    {%- else -%}
+      <div class="collection-hero__image collection-hero__placeholder"></div>
+    {%- endif -%}
+    <div class="collection-hero__overlay"></div>
+    <div class="collection-hero__content">
+      <div class="container">
+        {% render 'breadcrumb' %}
+        <h1 class="collection-hero__title">{{ collection.title }}</h1>
+        {%- if collection.description != blank -%}
+          <p class="collection-hero__description">{{ collection.description | strip_html | truncate: 160 }}</p>
+        {%- endif -%}
+        <p class="collection-hero__count">{{ collection.products_count }} {{ 'collection.products_count' | t: count: collection.products_count }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .collection-hero__wrapper {
+    position: relative;
+    min-height: 240px;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+  }
+  .collection-hero__image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .collection-hero__placeholder {
+    background: linear-gradient(135deg, var(--color-mauve) 0%, var(--color-charcoal) 100%);
+  }
+  .collection-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, var(--color-charcoal-80) 0%, rgba(46, 42, 51, 0.3) 100%);
+  }
+  .collection-hero__content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    padding: var(--space-2xl) 0;
+  }
+  .collection-hero__title {
+    color: var(--color-ivory);
+    font-size: var(--text-2xl);
+    margin-bottom: var(--space-sm);
+  }
+  .collection-hero__description {
+    color: var(--color-pearl);
+    font-size: var(--text-sm);
+    max-width: 600px;
+    margin-bottom: var(--space-sm);
+  }
+  .collection-hero__count {
+    color: var(--color-mauve);
+    font-size: var(--text-xs);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  @media (min-width: 768px) {
+    .collection-hero__wrapper { min-height: 320px; }
+    .collection-hero__title { font-size: var(--text-3xl); }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Collection Hero",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Collection Hero"
+    }
+  ]
+}
+{% endschema %}

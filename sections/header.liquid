@@ -1,0 +1,210 @@
+{% comment %}
+  #PERFUMERS HEADER SECTION
+  Extracted from Stitch Designs - Mobile First Luxury
+{% endcomment %}
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--color-ivory);
+    border-bottom: 1px solid var(--color-gold-10);
+    height: 70px;
+    padding: 0 20px;
+    overflow: hidden;
+  }
+
+  .site-header__container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: var(--page-width);
+    margin: 0 auto;
+    height: 100%;
+  }
+
+  .site-header__left,
+  .site-header__right {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+  }
+
+  .site-header__left {
+    justify-content: flex-start;
+  }
+
+  .site-header__right {
+    justify-content: flex-end;
+    gap: var(--space-md);
+  }
+
+  .site-header__logo {
+    flex: 1;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70px;
+    overflow: hidden;
+  }
+
+  .site-header__logo-link {
+    font-family: var(--font-serif);
+    font-size: 1.25rem;
+    font-weight: var(--font-weight-light);
+    letter-spacing: var(--tracking-luxury);
+    text-transform: uppercase;
+    color: var(--color-charcoal);
+    text-decoration: none;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    transition: var(--transition-base);
+  }
+
+  .site-header__logo-link:hover {
+    color: var(--color-primary);
+  }
+
+  .site-header__logo-img {
+    max-width: {{ section.settings.logo_width | default: 150 | at_most: 150 }}px;
+    max-height: 55px;
+    width: auto;
+    height: auto;
+    display: block;
+    object-fit: contain;
+  }
+
+  .site-header__icon {
+    background: none;
+    border: none;
+    padding: var(--space-xs);
+    cursor: pointer;
+    color: var(--color-charcoal);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-base);
+    text-decoration: none;
+  }
+
+  .site-header__icon:hover {
+    color: var(--color-primary);
+  }
+
+  .site-header__icon span {
+    font-size: 24px;
+  }
+
+  .site-header__cart-wrapper {
+    position: relative;
+  }
+
+  .site-header__cart-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background-color: var(--color-primary);
+    color: var(--color-ivory);
+    font-size: 8px;
+    width: 14px;
+    height: 14px;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-sans);
+    font-weight: var(--font-weight-bold);
+  }
+
+  /* Desktop Adjustments */
+  @media screen and (min-width: 769px) {
+    .site-header {
+      padding: 0 var(--space-xl);
+    }
+  }
+</style>
+
+<header class="site-header" data-section-id="{{ section.id }}" data-section-type="header">
+  <div class="site-header__container">
+    <!-- Left: Hamburger Menu and Language Toggle -->
+    <div class="site-header__left">
+      <!-- A11y: descriptive aria-label for icon-only menu button -->
+      <button type="button" class="site-header__icon" data-drawer-open="mobile-menu" aria-label="Open mobile menu">
+        <span class="material-symbols-outlined" aria-hidden="true">menu</span>
+      </button>
+      
+      {%- if localization.available_languages.size > 1 -%}
+        {%- form 'localization', id: 'HeaderLanguageForm' -%}
+          {%- for language in localization.available_languages -%}
+            {%- if language.iso_code != localization.language.iso_code -%}
+              <!-- A11y: aria-label describes the action + language name -->
+              <button type="submit" name="locale_code" value="{{ language.iso_code }}" class="site-header__lang-toggle" aria-label="Switch language to {{ language.endonym_name }}">
+                {{ language.iso_code | upcase }}
+              </button>
+            {%- endif -%}
+          {%- endfor -%}
+        {%- endform -%}
+      {%- endif -%}
+    </div>
+
+    <!-- Center: Logo Wordmark -->
+    <div class="site-header__logo">
+      <a href="{{ routes.root_url }}" class="site-header__logo-link">
+        {% if section.settings.logo != blank %}
+          <img src="{{ section.settings.logo | image_url: width: 400 }}"
+               alt="{{ shop.name }}"
+               class="site-header__logo-img"
+               style="max-height: 55px; width: auto; max-width: 150px; object-fit: contain; display: block;"
+               loading="eager">
+        {% else %}
+          <img src="{{ 'logo--.png' | asset_url }}"
+               alt="{{ shop.name }}"
+               class="site-header__logo-img"
+               style="max-height: 55px; width: auto; max-width: 150px; object-fit: contain; display: block;"
+               loading="eager">
+        {% endif %}
+      </a>
+    </div>
+
+    <!-- Right: Search and Cart -->
+    <div class="site-header__right">
+      <!-- A11y: descriptive aria-label for icon-only search button -->
+      <button type="button" class="site-header__icon" data-overlay-open="search" aria-label="Open search">
+        <span class="material-symbols-outlined" aria-hidden="true">search</span>
+      </button>
+      
+      <!-- A11y: descriptive aria-label for icon-only cart button -->
+      <a href="/cart" class="site-header__icon site-header__cart-wrapper" data-drawer-open="cart" aria-label="Open cart drawer">
+        <span class="material-symbols-outlined" aria-hidden="true">shopping_bag</span>
+        <span class="site-header__cart-badge cart-count" id="cart-count" data-cart-count data-count="0" aria-label="Cart items">0</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 80,
+      "max": 280,
+      "step": 2,
+      "unit": "px",
+      "label": "Logo width",
+      "default": 180
+    }
+  ]
+}
+{% endschema %}

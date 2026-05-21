@@ -1,0 +1,108 @@
+<section class="new-arrivals section" data-section-id="{{ section.id }}">
+  <div class="container">
+    <div class="section__header" data-animate>
+      <span class="section__accent">{{ section.settings.accent_text }}</span>
+      <h2 class="section__title">{%- if section.settings.title != blank -%}{{ section.settings.title }}{%- else -%}{{ 'sections.new_arrivals.title' | t }}{%- endif -%}</h2>
+      <p class="section__subtitle">{%- if section.settings.subtitle != blank -%}{{ section.settings.subtitle }}{%- else -%}{{ 'sections.new_arrivals.subtitle' | t }}{%- endif -%}</p>
+      <div class="divider"></div>
+    </div>
+
+    <div class="scroll-row new-arrivals__row">
+      {%- if section.settings.collection != blank -%}
+        {%- for product in section.settings.collection.products limit: section.settings.products_limit -%}
+          <div class="new-arrivals__item">
+            {% render 'product-card', product: product, badge: 'new' %}
+          </div>
+        {%- endfor -%}
+      {%- else -%}
+        {%- for i in (1..4) -%}
+          <div class="new-arrivals__item">
+            <div class="product-card">
+              <div class="product-card__image-wrapper">
+                <div class="placeholder-image" style="aspect-ratio:3/4;">{{ 'product-' | append: i | placeholder_svg_tag }}</div>
+              </div>
+              <p class="product-card__brand">Brand Name</p>
+              <p class="product-card__title">New Perfume {{ i }}</p>
+              <p class="product-card__price">1,200.00 EGP</p>
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+
+    {%- if section.settings.view_all_link != blank -%}
+      <div class="text-center mt-xl">
+        <a href="{{ section.settings.view_all_link }}" class="btn btn-secondary btn-small">{{ 'actions.view_all' | t }}</a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+<style>
+  .new-arrivals__item {
+    flex: 0 0 260px;
+    max-width: 260px;
+  }
+  @media (min-width: 768px) {
+    .new-arrivals__row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--space-xl);
+      overflow: visible;
+    }
+    .new-arrivals__item {
+      flex: none;
+      max-width: none;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "New Arrivals",
+  "settings": [
+    {
+      "type": "text",
+      "id": "accent_text",
+      "label": "Accent text",
+      "default": "Just In"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "New Arrivals"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Just landed"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_limit",
+      "label": "Products to show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "type": "url",
+      "id": "view_all_link",
+      "label": "View all link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "New Arrivals"
+    }
+  ]
+}
+{% endschema %}

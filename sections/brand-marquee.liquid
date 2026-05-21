@@ -1,0 +1,187 @@
+<style>
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  .brand-slider-section {
+    background-color: #F5F1EB;
+    padding: 48px 0;
+    overflow: hidden;
+  }
+  @media (max-width: 767px) {
+    .brand-slider-section { padding: 32px 0; }
+  }
+  .brand-slider__heading {
+    text-align: center;
+    margin-bottom: 32px;
+    padding: 0 24px;
+  }
+  .brand-slider__heading h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 400;
+    font-style: italic;
+    color: #2D2926;
+    letter-spacing: 0.04em;
+    margin: 0;
+  }
+  .brand-slider__heading h3::after {
+    content: '';
+    display: block;
+    width: 48px;
+    height: 1px;
+    background: #C8A46A;
+    margin: 14px auto 0;
+  }
+  .brand-slider-wrapper {
+    position: relative;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
+  }
+  .brand-slider-track {
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    width: max-content;
+    animation: marquee 35s linear infinite;
+    will-change: transform;
+  }
+  .brand-slider-section:hover .brand-slider-track {
+    animation-play-state: paused;
+  }
+  .brand-logo-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    flex-shrink: 0;
+    width: 120px;
+    height: 120px;
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(200, 164, 106, 0.18);
+    border-radius: 50%;
+    transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                box-shadow 0.35s ease,
+                border-color 0.35s ease;
+    cursor: pointer;
+  }
+  .brand-logo-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(200, 164, 106, 0.5);
+    box-shadow: 0 6px 20px rgba(200, 164, 106, 0.12);
+  }
+  .brand-logo-card img {
+    display: block;
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid rgba(200, 164, 106, 0.15);
+    padding: 8px;
+    pointer-events: none;
+    user-select: none;
+    transition: transform 0.35s ease;
+  }
+  .brand-logo-card:hover img {
+    transform: scale(1.05);
+  }
+  @media (max-width: 767px) {
+    .brand-logo-card {
+      width: 100px;
+      height: 100px;
+    }
+    .brand-logo-card img {
+      width: 60px;
+      height: 60px;
+      padding: 6px;
+    }
+  }
+</style>
+
+<section class="brand-slider-section" id="brandSliderSection">
+  <div class="brand-slider__heading">
+    <h3>{{ section.settings.heading }}</h3>
+  </div>
+  <div class="brand-slider-wrapper">
+    <div class="brand-slider-track" id="brandSliderTrack">
+      {%- for i in (1..2) -%}
+        {%- assign is_clone = false -%}
+        {%- if i == 2 -%}{%- assign is_clone = true -%}{%- endif -%}
+        {%- for block in section.blocks -%}
+          <a href="{{ block.settings.link | default: '/collections/all' }}" 
+             class="brand-logo-card" 
+             {% if is_clone %}aria-hidden="true" tabindex="-1"{% endif %}
+             {{ block.shopify_attributes }}>
+            {%- if block.settings.logo != blank -%}
+              <img src="{{ block.settings.logo | image_url: width: 240 }}" alt="{{ block.settings.brand_name | escape }}" loading="lazy" draggable="false">
+            {%- else -%}
+              <img src="{{ block.settings.logo_file | asset_url }}" alt="{{ block.settings.brand_name | escape }}" loading="lazy" draggable="false">
+            {%- endif -%}
+          </a>
+        {%- endfor -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{%- comment -%} JS Duplication removed in favor of Liquid duplication for confirmation {%- endcomment -%}
+
+{% schema %}
+{
+  "name": "Brand Logo Slider",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Section heading",
+      "default": "Shop by Brand"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "Brand Logo",
+      "settings": [
+        {
+          "type": "text",
+          "id": "brand_name",
+          "label": "Brand name"
+        },
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Logo image (uploaded to Shopify Files)"
+        },
+        {
+          "type": "text",
+          "id": "logo_file",
+          "label": "Logo filename (in theme assets)",
+          "info": "e.g. brand-logo-dkhoon.jpg"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Collection link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Marquee",
+      "blocks": [
+        { "type": "logo", "settings": { "brand_name": "Dkhoon", "logo_file": "brand-logo-dkhoon.jpg" } },
+        { "type": "logo", "settings": { "brand_name": "Afnan", "logo_file": "brand-logo-afnan.jpg" } },
+        { "type": "logo", "settings": { "brand_name": "Assaf", "logo_file": "brand-logo-assaf.png" } },
+        { "type": "logo", "settings": { "brand_name": "Lattafa", "logo_file": "brand-logo-lattafa.png" } },
+        { "type": "logo", "settings": { "brand_name": "French Avenue", "logo_file": "brand-logo-french-avenue.jpg" } },
+        { "type": "logo", "settings": { "brand_name": "IBRAQ", "logo_file": "brand-logo-ibraq.jpg" } },
+        { "type": "logo", "settings": { "brand_name": "Rasasi", "logo_file": "brand-logo-rasasi.webp" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

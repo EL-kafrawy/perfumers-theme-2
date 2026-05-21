@@ -1,0 +1,119 @@
+{{ 'recently-viewed.css' | asset_url | stylesheet_tag }}
+
+<section class="recently-viewed section" data-section-id="{{ section.id }}">
+  <div class="container">
+    <div class="section__header" data-animate>
+      <span class="section__accent">{{ section.settings.accent_text }}</span>
+      <h2 class="section__title">{{ section.settings.title | default: 'Recently Viewed' }}</h2>
+      <div class="divider"></div>
+    </div>
+    <div id="rv-grid" class="recently-viewed__grid"></div>
+  </div>
+</section>
+
+<style>
+  .recently-viewed {
+    padding: 60px 20px;
+  }
+  .recently-viewed__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 24px;
+  }
+  .recently-viewed__card {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease;
+  }
+  .recently-viewed__card:hover {
+    transform: translateY(-4px);
+  }
+  .recently-viewed__card img {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  .recently-viewed__card-info {
+    padding: 12px 0;
+  }
+  .recently-viewed__card-title {
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+    font-family: 'Montserrat', sans-serif;
+    color: var(--color-charcoal, #2D2926);
+  }
+  .recently-viewed__card-price {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-charcoal, #2D2926);
+  }
+  .recently-viewed.is-hidden {
+    display: none;
+  }
+</style>
+
+<script>
+(function(){
+  var grid = document.getElementById('rv-grid');
+  if (!grid) return;
+  var handles = JSON.parse(localStorage.getItem('pf_rv') || '[]').slice(0, {{ section.settings.products_to_show | default: 4 }});
+  if (!handles.length) {
+    grid.closest('.recently-viewed').classList.add('is-hidden');
+    return;
+  }
+  handles.forEach(function(handle){
+    fetch('/products/' + handle + '.js')
+      .then(function(r){ return r.json(); })
+      .then(function(p){
+        var card = document.createElement('a');
+        card.href = '/products/' + p.handle;
+        card.className = 'recently-viewed__card';
+        var priceFormatted = (p.price / 100).toLocaleString('en-EG', { minimumFractionDigits: 2 }) + ' EGP';
+        card.innerHTML =
+          '<img src="' + p.featured_image + '" alt="' + p.title.replace(/"/g, '&quot;') + '" loading="lazy">' +
+          '<div class="recently-viewed__card-info">' +
+            '<div class="recently-viewed__card-title">' + p.title + '</div>' +
+            '<div class="recently-viewed__card-price">' + priceFormatted + '</div>' +
+          '</div>';
+        grid.appendChild(card);
+      }).catch(function(){});
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Recently Viewed",
+  "settings": [
+    {
+      "type": "text",
+      "id": "accent_text",
+      "label": "Accent text",
+      "default": "Your History"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "Recently Viewed"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4
+    }
+  ],
+  "presets": [
+    {
+      "name": "Recently Viewed"
+    }
+  ]
+}
+{% endschema %}

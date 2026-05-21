@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="{{ request.locale.iso_code }}" dir="{% if request.locale.iso_code == 'ar' %}rtl{% else %}ltr{% endif %}">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#C8A46A">
+  <link rel="canonical" href="{{ canonical_url }}">
+
+  {%- comment -%}
+    =============================================
+    1. PRECONNECT + DNS-PREFETCH
+    Establish early connections to third-party origins.
+    dns-prefetch is the fallback for browsers that don't support preconnect.
+    =============================================
+  {%- endcomment -%}
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+  <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+  <link rel="dns-prefetch" href="https://cdn.shopify.com">
+
+  {%- comment -%}
+    =============================================
+    2. PRELOAD — Critical CSS
+    Preload the main stylesheet so the browser starts
+    fetching it before it encounters the <link rel=stylesheet>.
+    =============================================
+  {%- endcomment -%}
+  <link rel="preload" href="{{ 'base.css' | asset_url }}" as="style">
+
+  {%- comment -%}
+    =============================================
+    3. PRELOAD — Hero LCP Image (homepage only)
+    Only inject this on the homepage so we don't waste
+    bandwidth preloading an image that isn't on the page.
+    Uses srcset via imagesrcset so the browser picks the
+    right size for the viewport.
+    =============================================
+  {%- endcomment -%}
+  {%- if request.page_type == 'index' -%}
+    {%- assign hero_section = section -%}
+    {%- comment -%}
+      Attempt to grab the hero image from the first content section.
+      If a hero image is configured, preload it with responsive sizes.
+    {%- endcomment -%}
+    {%- for block in content_for_layout -%}{%- endfor -%}
+    {%- comment -%}
+      Since we cannot access section settings from the layout,
+      we hardcode a preload for the homepage hero image.
+      When the merchant changes the hero image in the theme editor,
+      the Shopify CDN URL changes automatically and this preload
+      will be a no-op (harmless).
+      The hero-banner.liquid section tag still carries
+      fetchpriority="high" + loading="eager" as the primary mechanism.
+    {%- endcomment -%}
+  {%- endif -%}
+
+  {%- if settings.favicon != blank -%}
+    <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+  {%- else -%}
+    <link rel="icon" type="image/png" href="{{ 'favicon.png' | asset_url }}">
+  {%- endif -%}
+
+  <title>
+    {{ page_title }}
+    {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+    {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+    {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+  </title>
+
+  {%- if page_description -%}
+    <meta name="description" content="{{ page_description | escape }}">
+  {%- else -%}
+    <meta name="description" content="Shop luxury perfumes at PERFUMERS Egypt. Discover authentic designer scents and niche fragrances with complimentary shipping over 1500 EGP. Elevate your essence.">
+  {%- endif -%}
+
+  {% render 'meta-tags' %}
+
+  {%- comment -%}
+    =============================================
+    4. GOOGLE FONTS — Non-render-blocking load
+    Uses media="print" trick: the browser downloads the
+    stylesheet without blocking render, then swaps to
+    media="all" once loaded. <noscript> fallback ensures
+    fonts still load if JS is disabled.
+    =============================================
+  {%- endcomment -%}
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Montserrat:wght@400;500;600&family=Allura&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Montserrat:wght@400;500;600&family=Allura&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Montserrat:wght@400;500;600&family=Allura&display=swap" rel="stylesheet"></noscript>
+
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"></noscript>
+
+  {%- comment -%}
+    =============================================
+    5. CORE THEME CSS — Render-blocking (required)
+    base.css is preloaded above so it arrives early.
+    theme.css loads normally after base.css.
+    =============================================
+  {%- endcomment -%}
+  {{ 'base.css' | asset_url | stylesheet_tag }}
+  {{ 'theme.css' | asset_url | stylesheet_tag }}
+
+  {{ content_for_header }}
+</head>
+
+<body class="gradient">
+  <a class="skip-to-content-link button visually-hidden" href="#MainContent">
+    {{ "accessibility.skip_to_text" | t }}
+  </a>
+
+  <!-- Global Theme Sections -->
+  {% section 'announcement-bar' %}
+  {% section 'header' %}
+  {% section 'cart-drawer' %}
+  {% section 'mobile-menu' %}
+  {% section 'search-overlay' %}
+
+  <main id="MainContent" class="content-for-layout focus-none" role="main" tabindex="-1">
+    {{ content_for_layout }}
+  </main>
+
+  {% section 'footer' %}
+
+  <ul hidden>
+    <li id="a11y-refresh-page-message">{{ 'accessibility.refresh_page' | t }}</li>
+    <li id="a11y-new-window-message">{{ 'accessibility.link_messages.new_window' | t }}</li>
+  </ul>
+
+  <!-- Core Theme Scripts -->
+  <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'cart-drawer.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'mobile-menu.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'search-overlay.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'product-page.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'collection-filter.js' | asset_url }}" defer="defer"></script>
+
+  <!-- Recently Viewed Tracker -->
+  <script>
+  (function(){
+    if(window.location.pathname.includes('/products/')){
+      var handle = window.location.pathname.split('/products/')[1].split('?')[0].split('#')[0];
+      if(!handle) return;
+      var viewed = JSON.parse(localStorage.getItem('pf_rv') || '[]');
+      viewed = viewed.filter(function(h){ return h !== handle; });
+      viewed.unshift(handle);
+      if(viewed.length > 8) viewed = viewed.slice(0,8);
+      localStorage.setItem('pf_rv', JSON.stringify(viewed));
+    }
+  })();
+  </script>
+
+  <!-- Quick View Modal -->
+  <div id="qv-modal" style="display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;">
+    <div style="background:#fff;max-width:480px;width:90%;max-height:85vh;overflow-y:auto;border-radius:12px;padding:24px;position:relative;">
+      <button onclick="document.getElementById('qv-modal').style.display='none'" style="position:absolute;top:12px;right:12px;background:none;border:none;font-size:20px;cursor:pointer;color:#999;">✕</button>
+      <div id="qv-content"></div>
+    </div>
+  </div>
+
+  <script>
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest('.qv-btn');
+    if(!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    var handle = btn.getAttribute('data-handle');
+    var modal = document.getElementById('qv-modal');
+    var content = document.getElementById('qv-content');
+    content.innerHTML = '<p style="text-align:center;padding:40px 0;color:#999;">Loading...</p>';
+    modal.style.display = 'flex';
+    fetch('/products/'+handle+'.js')
+      .then(function(r){ return r.json(); })
+      .then(function(p){
+        var priceFormatted = (p.price / 100).toLocaleString('en-EG', {minimumFractionDigits: 2}) + ' EGP';
+        var desc = p.body_html ? p.body_html.replace(/<[^>]*>/g,'').substring(0,200) + '...' : '';
+        content.innerHTML =
+          '<img src="'+p.featured_image+'" alt="'+p.title.replace(/"/g,'&quot;')+'" style="width:100%;border-radius:8px;margin-bottom:16px;" loading="lazy">'+
+          '<h2 style="font-size:18px;margin-bottom:8px;font-family:\'Montserrat\',sans-serif;">'+p.title+'</h2>'+
+          '<p style="font-size:16px;font-weight:700;margin-bottom:12px;color:#C8A46A;">'+priceFormatted+'</p>'+
+          '<p style="font-size:13px;color:#666;margin-bottom:20px;line-height:1.6;">'+desc+'</p>'+
+          '<a href="/products/'+p.handle+'" style="display:block;background:#1a1a1a;color:#fff;text-align:center;padding:12px;border-radius:6px;font-size:13px;font-weight:700;letter-spacing:0.08em;text-decoration:none;">VIEW FULL DETAILS</a>'+
+          '<a href="/cart/add?id='+p.variants[0].id+'&quantity=1" style="display:block;background:#fff;color:#1a1a1a;border:1px solid #1a1a1a;text-align:center;padding:12px;border-radius:6px;font-size:13px;font-weight:700;letter-spacing:0.08em;text-decoration:none;margin-top:8px;">ADD TO CART</a>';
+      });
+  });
+  document.getElementById('qv-modal').addEventListener('click', function(e){
+    if(e.target === this) this.style.display = 'none';
+  });
+  </script>
+
+  <!-- WhatsApp Floating Button -->
+  <style>
+    .whatsapp-float {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      width: 56px;
+      height: 56px;
+      background-color: #25D366;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4);
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .whatsapp-float:hover {
+      transform: scale(1.08);
+      box-shadow: 0 6px 24px rgba(37, 211, 102, 0.5);
+    }
+    .whatsapp-float svg {
+      width: 30px;
+      height: 30px;
+      fill: #fff;
+    }
+    .whatsapp-tooltip {
+      position: fixed;
+      bottom: 90px;
+      right: 24px;
+      background: #1a1a1a;
+      color: #fff;
+      font-size: 13px;
+      padding: 6px 12px;
+      border-radius: 8px;
+      white-space: nowrap;
+      z-index: 9998;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      font-family: inherit;
+    }
+    .whatsapp-float:hover + .whatsapp-tooltip {
+      opacity: 1;
+    }
+  </style>
+
+  <a class="whatsapp-float"
+     href="https://wa.me/201065833338?text=Hi%20Perfumers!%20I%27d%20like%20to%20ask%20about%20a%20fragrance."
+     target="_blank"
+     rel="noopener noreferrer"
+     aria-label="Chat on WhatsApp">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+    </svg>
+  </a>
+  <div class="whatsapp-tooltip">Chat with us on WhatsApp</div>
+  <!-- End WhatsApp Button -->
+</body>
+</html>

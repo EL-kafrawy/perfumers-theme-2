@@ -1,0 +1,177 @@
+{%- assign col_handle = section.settings.collection -%}
+{%- assign col = collections[col_handle] -%}
+{%- assign products_to_show = section.settings.products_to_show | default: 4 -%}
+
+{%- if col != blank and col.products.size > 0 -%}
+<section class="featured-collection section" data-section-id="{{ section.id }}">
+  <div class="container">
+    <div class="section__header" data-animate>
+      {%- if section.settings.accent_text != blank -%}
+        <span class="section__accent">{{ section.settings.accent_text }}</span>
+      {%- endif -%}
+      <h2 class="section__title">{{ section.settings.title | default: col.title }}</h2>
+      <div class="divider"></div>
+    </div>
+
+    <div class="featured-collection__grid">
+      {%- for product in col.products limit: products_to_show -%}
+        {% render 'product-card', product: product %}
+      {%- endfor -%}
+    </div>
+
+    {%- if section.settings.show_view_all -%}
+      <div class="featured-collection__view-all">
+        <a href="{{ col.url }}" class="btn btn-secondary">
+          {{ 'actions.view_all' | t | default: 'View All' }}
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+{%- else -%}
+  {%- comment -%} Fallback: show static blocks if no collection is connected {%- endcomment -%}
+  {%- if section.blocks.size > 0 -%}
+  <section class="featured-collection section" data-section-id="{{ section.id }}">
+    <div class="container">
+      <div class="section__header" data-animate>
+        <h2 class="section__title">{{ section.settings.title }}</h2>
+        <div class="divider"></div>
+      </div>
+      <div class="featured-collection__grid">
+        {%- for block in section.blocks -%}
+          <div class="product-card" {{ block.shopify_attributes }}>
+            <div class="product-card__image-wrapper">
+              {%- if block.settings.image != blank -%}
+                <img src="{{ block.settings.image | image_url: width: 600 }}"
+                     alt="{{ block.settings.title | escape }}"
+                     class="product-card__image"
+                     loading="lazy">
+              {%- else -%}
+                <div class="product-card__image placeholder-image" style="aspect-ratio:3/4;">
+                  {{ 'product-1' | placeholder_svg_tag }}
+                </div>
+              {%- endif -%}
+              {%- if block.settings.badge != blank -%}
+                <span class="product-card__badge product-card__badge--new">{{ block.settings.badge }}</span>
+              {%- endif -%}
+            </div>
+            <div class="product-card__info">
+              <p class="product-card__brand">{{ block.settings.brand }}</p>
+              <h3 class="product-card__title">{{ block.settings.title }}</h3>
+              <div class="product-card__price-wrapper">
+                {%- if block.settings.compare_price != blank -%}
+                  <span class="product-card__price--compare">{{ block.settings.compare_price }}</span>
+                {%- endif -%}
+                <span class="product-card__price">{{ block.settings.price }}</span>
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </section>
+  {%- endif -%}
+{%- endif -%}
+
+<style>
+  .featured-collection {
+    padding: 60px 0;
+  }
+  .featured-collection__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    row-gap: 40px;
+  }
+  @media (min-width: 768px) {
+    .featured-collection__grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  .featured-collection__view-all {
+    text-align: center;
+    margin-top: 40px;
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Featured Collection",
+  "settings": [
+    {
+      "type": "text",
+      "id": "accent_text",
+      "label": "Accent text"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section title",
+      "default": "Featured Products"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show 'View All' button",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product Card",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Product image"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge text"
+        },
+        {
+          "type": "text",
+          "id": "brand",
+          "label": "Brand name"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Product title"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price"
+        },
+        {
+          "type": "text",
+          "id": "compare_price",
+          "label": "Compare-at price"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured Collection"
+    }
+  ]
+}
+{% endschema %}

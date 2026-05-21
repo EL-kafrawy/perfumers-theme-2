@@ -1,0 +1,126 @@
+<style>
+  .sbg-section { padding: 3.5rem 0; background: #F5F1EB; }
+  .sbg-header { text-align: center; margin-bottom: 2rem; }
+  .sbg-accent { display: block; font-family: 'Montserrat', sans-serif; font-size: 0.65rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.3em; color: #C8A46A; margin-bottom: 0.5rem; }
+  .sbg-title { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 400; color: #2E2A33; letter-spacing: 0.03em; margin: 0 0 0.5rem; }
+  .sbg-subtitle { font-family: 'Montserrat', sans-serif; font-size: 0.85rem; color: #9B8778; margin: 0; }
+  .sbg-divider { width: 48px; height: 1px; background: #C8A46A; margin: 1rem auto 0; }
+  .sbg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; max-width: 900px; margin: 0 auto; padding: 0 1.5rem; }
+  @media (max-width: 767px) { .sbg-grid { grid-template-columns: 1fr; max-width: 400px; } }
+  .sbg-card { text-decoration: none; color: inherit; border-radius: 16px; overflow: hidden; transition: transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.45s ease; display: block; }
+  .sbg-card:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(147,115,59,0.12); }
+  .sbg-card-inner { position: relative; background: linear-gradient(145deg, rgba(250,248,245,0.95), rgba(240,235,228,0.85)); border: 1px solid rgba(200,164,106,0.15); border-radius: 16px; padding: 2.5rem 1.5rem 2rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 1rem; min-height: 220px; justify-content: center; overflow: hidden; }
+  .sbg-card:hover .sbg-card-inner { border-color: rgba(200,164,106,0.4); }
+  .sbg-card-inner::before { content: ''; position: absolute; top: 0; left: -100%; width: 60%; height: 100%; background: linear-gradient(90deg, transparent, rgba(200,164,106,0.06), transparent); transition: left 0.7s ease; pointer-events: none; }
+  .sbg-card:hover .sbg-card-inner::before { left: 120%; }
+  .sbg-icon-wrap { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, rgba(200,164,106,0.12), rgba(200,164,106,0.04)); border: 1px solid rgba(200,164,106,0.2); display: flex; align-items: center; justify-content: center; transition: all 0.4s ease; }
+  .sbg-card:hover .sbg-icon-wrap { background: linear-gradient(135deg, rgba(200,164,106,0.2), rgba(200,164,106,0.08)); border-color: rgba(200,164,106,0.45); transform: scale(1.08); }
+  .sbg-icon { font-size: 36px; color: #93733B; opacity: 0.85; transition: opacity 0.3s ease; }
+  .sbg-card:hover .sbg-icon { opacity: 1; }
+  .sbg-card-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; font-weight: 500; color: #2E2A33; letter-spacing: 0.03em; margin: 0; line-height: 1.2; }
+  .sbg-cta { display: inline-flex; align-items: center; gap: 0.4rem; font-family: 'Montserrat', sans-serif; font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: #93733B; transition: gap 0.3s ease; }
+  .sbg-card:hover .sbg-cta { gap: 0.65rem; }
+  .sbg-cta svg { transition: transform 0.3s ease; }
+  .sbg-card:hover .sbg-cta svg { transform: translateX(3px); }
+  @media (max-width: 767px) {
+    .sbg-card-inner { padding: 2rem 1.25rem 1.5rem; min-height: auto; flex-direction: row; text-align: left; gap: 1.25rem; }
+    .sbg-card-inner .sbg-content { align-items: flex-start; }
+    .sbg-icon-wrap { width: 64px; height: 64px; flex-shrink: 0; }
+    .sbg-icon { font-size: 28px; }
+  }
+</style>
+
+<section class="sbg-section">
+  <div class="sbg-header">
+    <span class="sbg-accent">{{ section.settings.accent_text }}</span>
+    <h3 class="sbg-title">{{ section.settings.title }}</h3>
+    <p class="sbg-subtitle">{{ section.settings.subtitle }}</p>
+    <div class="sbg-divider"></div>
+  </div>
+
+  <div class="sbg-grid">
+    {%- for block in section.blocks -%}
+      <a href="{{ block.settings.link | default: '#' }}" class="sbg-card" {{ block.shopify_attributes }}>
+        <div class="sbg-card-inner">
+          <div class="sbg-icon-wrap">
+            <span class="material-symbols-outlined sbg-icon">{{ block.settings.icon }}</span>
+          </div>
+          <div class="sbg-content" style="display:flex;flex-direction:column;align-items:center;gap:0.5rem;">
+            <h4 class="sbg-card-title">{{ block.settings.title }}</h4>
+            <span class="sbg-cta">
+              {{ block.settings.cta_text }}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </span>
+          </div>
+        </div>
+      </a>
+    {%- endfor -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Shop by Gender",
+  "settings": [
+    {
+      "type": "text",
+      "id": "accent_text",
+      "label": "Accent text",
+      "default": "For You"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "Shop by Gender"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Find fragrances crafted for your style"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "gender",
+      "name": "Gender Category",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Material icon name",
+          "default": "person",
+          "info": "e.g. male, female, diversity_1"
+        },
+        {
+          "type": "text",
+          "id": "cta_text",
+          "label": "CTA text",
+          "default": "Explore"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Collection link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop by Gender",
+      "blocks": [
+        { "type": "gender", "settings": { "title": "Men", "icon": "male" } },
+        { "type": "gender", "settings": { "title": "Women", "icon": "female" } },
+        { "type": "gender", "settings": { "title": "Unisex", "icon": "diversity_1" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
