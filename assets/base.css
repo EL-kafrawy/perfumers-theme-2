@@ -555,10 +555,6 @@
   visibility: visible;
 }
 
- b o d y   { 
- p a d d i n g - b o t t o m :   7 0 p x ; 
- }  
- 
 /* ============================================
    PERFUMERS — Mobile Responsive Fixes
    Mobile-first (min-width breakpoints)
@@ -768,20 +764,6 @@ span[class]:not([class*="icon"]) {
   }
 }
 
-/* ---- Header & Logo Centering Fix ---- */
-.site-header__container {
-  position: relative;
-}
-.site-header__logo {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  width: auto;
-  pointer-events: none; /* Let clicks pass to nav if overlapping slightly */
-}
-.site-header__logo-link {
-  pointer-events: auto;
-}
 
 /* ---- Cart Badge Hide if Empty ---- */
 .cart-count:empty,
