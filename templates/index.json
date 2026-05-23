@@ -60,7 +60,7 @@
     "shop-by-occasion": {
       "type": "shop-by-occasion",
       "settings": {
-        "title": "Choose Your Mood"
+        "title": "Shop by Gender"
       },
       "blocks": {
         "occ-1": {
