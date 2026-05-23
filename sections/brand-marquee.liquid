@@ -99,6 +99,8 @@
                {{ block.shopify_attributes }}>
               {%- if block.settings.logo != blank -%}
                 <img src="{{ block.settings.logo | image_url: width: 240 }}" alt="{{ block.settings.brand_name | escape }}" loading="lazy" draggable="false">
+              {%- elsif block.settings.logo_url != blank -%}
+                <img src="{{ block.settings.logo_url }}" alt="{{ block.settings.brand_name | escape }}" loading="lazy" draggable="false">
               {%- elsif block.settings.logo_file != blank -%}
                 <img src="{{ block.settings.logo_file | asset_url }}" alt="{{ block.settings.brand_name | escape }}" loading="lazy" draggable="false">
               {%- else -%}
@@ -139,6 +141,11 @@
           "type": "image_picker",
           "id": "logo",
           "label": "Logo image (uploaded to Shopify Files)"
+        },
+        {
+          "type": "text",
+          "id": "logo_url",
+          "label": "Logo image URL (Stitch mockups)"
         },
         {
           "type": "text",

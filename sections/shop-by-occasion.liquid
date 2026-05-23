@@ -6,6 +6,8 @@
         <div class="relative h-48 w-full overflow-hidden group" {{ block.shopify_attributes }}>
           {%- if block.settings.image != blank -%}
             <img class="w-full h-full object-cover grayscale-[0.4] group-hover:scale-105 transition-transform duration-1000" src="{{ block.settings.image | image_url: width: 1400 }}" alt="{{ block.settings.title | escape }}">
+          {%- elsif block.settings.image_url != blank -%}
+            <img class="w-full h-full object-cover grayscale-[0.4] group-hover:scale-105 transition-transform duration-1000" src="{{ block.settings.image_url }}" alt="{{ block.settings.title | escape }}">
           {%- else -%}
             <div class="w-full h-full" style="background: #d8cfc9;"></div>
           {%- endif -%}
@@ -18,6 +20,8 @@
         <div class="relative h-48 overflow-hidden group" {{ block.shopify_attributes }}>
           {%- if block.settings.image != blank -%}
             <img class="w-full h-full object-cover grayscale-[0.4] group-hover:scale-105 transition-transform duration-1000" src="{{ block.settings.image | image_url: width: 800 }}" alt="{{ block.settings.title | escape }}">
+          {%- elsif block.settings.image_url != blank -%}
+            <img class="w-full h-full object-cover grayscale-[0.4] group-hover:scale-105 transition-transform duration-1000" src="{{ block.settings.image_url }}" alt="{{ block.settings.title | escape }}">
           {%- else -%}
             <div class="w-full h-full" style="background: #d8cfc9;"></div>
           {%- endif -%}
@@ -91,6 +95,11 @@
           "type": "image_picker",
           "id": "image",
           "label": "Background image"
+        },
+        {
+          "type": "text",
+          "id": "image_url",
+          "label": "Background image URL (Stitch mockups)"
         },
         {
           "type": "text",
