@@ -3,7 +3,7 @@
     {%- if section.settings.image != blank -%}
       <img class="w-full h-full object-cover opacity-70 mix-blend-multiply" src="{{ section.settings.image | image_url: width: 2000 }}" alt="{{ section.settings.image_alt | escape }}">
     {%- else -%}
-      <img class="w-full h-full object-cover opacity-70 mix-blend-multiply" src="{{ 'placeholder.jpg' | asset_url }}" alt="Luxury perfume bottle detail">
+      <img class="w-full h-full object-cover opacity-70 mix-blend-multiply" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8dr8CVj7aHSW5KVE0zwDxLutynyhn8OvR1a66iPcCxDOufyXQz5X7T4A6kjyrK2js-ktmkJ_0Q8tCL_iVItDA2dG7olE9a8GWL4fg8S_j0n9jgaOB7tCNlm_vCEpS1OGfAzNrKLURZbghqPWKm6ay3r3qbywUuJVKF6gJr0GCR_SB0u5ogvWGzaYbciqWwMhH7j3KjY6DP9sluWUc5Dr1PJLzeNClsHX-Wu7ep3Ob8TGnKtClbwiZoUX7zKsYgiVrFbiVmR3zHwg" alt="Luxury perfume bottle detail">
     {%- endif -%}
     <div class="absolute inset-0 bg-gradient-to-b from-soft-ivory/20 via-soft-ivory/40 to-soft-ivory"></div>
   </div>
@@ -11,10 +11,9 @@
     {%- if section.settings.accent_text != blank -%}
       <span class="text-[9px] uppercase tracking-[0.5em] text-primary mb-4 block font-semibold font-display">{{ section.settings.accent_text }}</span>
     {%- endif -%}
-    <h2 class="mb-6 italic leading-[1.1] tracking-tight" style="font-family: 'Cormorant Garamond', serif; font-size: 72px; font-weight: 300; color: #2E2A33;">{{ section.settings.heading }}</h2>
-    <p class="mb-8 leading-relaxed max-w-[400px] mx-auto" style="font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 400; color: #9B8778;">{{ section.settings.subheading }}</p>
+    <h2 class="mb-6 leading-[1.2] tracking-tight" style="font-family: 'Cormorant Garamond', serif; font-size: 72px; font-weight: 300; color: #2E2A33; font-style: normal;">{{ section.settings.heading }}</h2>
+    <p class="mb-8 leading-relaxed max-w-[400px] mx-auto" style="font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 400; color: #9B8778;">{{ section.settings.subheading }}</p>
     <a class="inline-block uppercase tracking-[0.2em] transition-all hover:bg-charcoal/90" href="{{ section.settings.button_link }}" style="background-color: #C8A46A; color: #F5F1EB; font-family: 'Montserrat', sans-serif; font-weight: 600; border-radius: 2px; padding: 16px 32px; font-size: 12px;">{{ section.settings.button_text }}</a>
-    <p class="hero-trust-line" style="font-family: 'Montserrat', sans-serif; font-size: 13px; opacity: 0.75; letter-spacing: 0.05em; color: #2E2A33; margin-top: 16px;">✅ Cash on Delivery Available | 🚚 Delivered Across All of Egypt</p>
   </div>
 </section>
 

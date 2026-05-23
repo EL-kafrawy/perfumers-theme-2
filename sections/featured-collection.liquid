@@ -2,25 +2,77 @@
 {%- assign col = collections[col_handle] -%}
 {%- assign products_to_show = section.settings.products_to_show | default: 4 -%}
 
-{%- if col != blank and col.products.size > 0 -%}
-<section class="featured-collection section" data-section-id="{{ section.id }}">
-  <div class="container">
-    <div class="section__header" data-animate>
-      {%- if section.settings.accent_text != blank -%}
-        <span class="section__accent">{{ section.settings.accent_text }}</span>
+<section class="featured-collection-section" data-section-id="{{ section.id }}">
+  <div class="treasured-finds__container">
+    <h3 class="treasured-finds__title">{{ section.settings.title | default: "Treasured Finds" }}</h3>
+
+    <div class="treasured-finds__grid">
+      {%- if col != blank and col.products.size > 0 -%}
+        {%- for product in col.products limit: products_to_show -%}
+          <a href="{{ product.url }}" class="treasured-find-card group">
+            <div class="treasured-find-card__img-wrapper">
+              {%- if product.featured_image -%}
+                <img class="treasured-find-card__image" src="{{ product.featured_image | image_url: width: 600 }}" alt="{{ product.title | escape }}" loading="lazy">
+              {%- else -%}
+                <div class="w-full h-full" style="background: #ece9e6;"></div>
+              {%- endif -%}
+              
+              {%- liquid
+                assign badge_text = ''
+                for tag in product.tags
+                  if tag contains 'badge:'
+                    assign badge_text = tag | remove: 'badge:'
+                  endif
+                endfor
+              -%}
+              {%- if badge_text != blank -%}
+                <div class="treasured-find-card__badge">{{ badge_text }}</div>
+              {%- elsif product.compare_at_price > product.price -%}
+                <div class="treasured-find-card__badge">Sale</div>
+              {%- endif -%}
+            </div>
+            <p class="treasured-find-card__brand">{{ product.vendor }}</p>
+            <h4 class="treasured-find-card__title">{{ product.title }}</h4>
+            <p class="treasured-find-card__price">
+              {{ product.price | money }}
+              {%- if product.compare_at_price > product.price -%}
+                <span class="line-through treasured-find-card__price--compare">{{ product.compare_at_price | money }}</span>
+              {%- endif -%}
+            </p>
+          </a>
+        {%- endfor -%}
+      {%- else -%}
+        {%- if section.blocks.size > 0 -%}
+          {%- for block in section.blocks -%}
+            <div class="treasured-find-card group" {{ block.shopify_attributes }}>
+              <div class="treasured-find-card__img-wrapper">
+                {%- if block.settings.image != blank -%}
+                  <img class="treasured-find-card__image" src="{{ block.settings.image | image_url: width: 600 }}" alt="{{ block.settings.title | escape }}" loading="lazy">
+                {%- elsif block.settings.image_url != blank -%}
+                  <img class="treasured-find-card__image" src="{{ block.settings.image_url }}" alt="{{ block.settings.title | escape }}" loading="lazy">
+                {%- else -%}
+                  <div class="w-full h-full" style="background: #ece9e6;"></div>
+                {%- endif -%}
+                {%- if block.settings.badge != blank -%}
+                  <div class="treasured-find-card__badge">{{ block.settings.badge }}</div>
+                {%- endif -%}
+              </div>
+              <p class="treasured-find-card__brand">{{ block.settings.brand }}</p>
+              <h4 class="treasured-find-card__title">{{ block.settings.title }}</h4>
+              <p class="treasured-find-card__price">
+                {{ block.settings.price }}
+                {%- if block.settings.compare_price != blank -%}
+                  <span class="line-through treasured-find-card__price--compare">{{ block.settings.compare_price }}</span>
+                {%- endif -</p>
+              </p>
+            </div>
+          {%- endfor -%}
+        {%- endif -%}
       {%- endif -%}
-      <h2 class="section__title">{{ section.settings.title | default: col.title }}</h2>
-      <div class="divider"></div>
     </div>
 
-    <div class="featured-collection__grid">
-      {%- for product in col.products limit: products_to_show -%}
-        {% render 'product-card', product: product %}
-      {%- endfor -%}
-    </div>
-
-    {%- if section.settings.show_view_all -%}
-      <div class="featured-collection__view-all">
+    {%- if section.settings.show_view_all and col != blank -%}
+      <div class="treasured-finds__view-all">
         <a href="{{ col.url }}" class="btn btn-secondary">
           {{ 'actions.view_all' | t | default: 'View All' }}
         </a>
@@ -28,69 +80,127 @@
     {%- endif -%}
   </div>
 </section>
-{%- else -%}
-  {%- comment -%} Fallback: show static blocks if no collection is connected {%- endcomment -%}
-  {%- if section.blocks.size > 0 -%}
-  <section class="featured-collection section" data-section-id="{{ section.id }}">
-    <div class="container">
-      <div class="section__header" data-animate>
-        <h2 class="section__title">{{ section.settings.title }}</h2>
-        <div class="divider"></div>
-      </div>
-      <div class="featured-collection__grid">
-        {%- for block in section.blocks -%}
-          <div class="product-card" {{ block.shopify_attributes }}>
-            <div class="product-card__image-wrapper">
-              {%- if block.settings.image != blank -%}
-                <img src="{{ block.settings.image | image_url: width: 600 }}"
-                     alt="{{ block.settings.title | escape }}"
-                     class="product-card__image"
-                     loading="lazy">
-              {%- else -%}
-                <div class="product-card__image placeholder-image" style="aspect-ratio:3/4;">
-                  {{ 'product-1' | placeholder_svg_tag }}
-                </div>
-              {%- endif -%}
-              {%- if block.settings.badge != blank -%}
-                <span class="product-card__badge product-card__badge--new">{{ block.settings.badge }}</span>
-              {%- endif -%}
-            </div>
-            <div class="product-card__info">
-              <p class="product-card__brand">{{ block.settings.brand }}</p>
-              <h3 class="product-card__title">{{ block.settings.title }}</h3>
-              <div class="product-card__price-wrapper">
-                {%- if block.settings.compare_price != blank -%}
-                  <span class="product-card__price--compare">{{ block.settings.compare_price }}</span>
-                {%- endif -%}
-                <span class="product-card__price">{{ block.settings.price }}</span>
-              </div>
-            </div>
-          </div>
-        {%- endfor -%}
-      </div>
-    </div>
-  </section>
-  {%- endif -%}
-{%- endif -%}
 
 <style>
-  .featured-collection {
-    padding: 60px 0;
+  .featured-collection-section {
+    padding: 6rem 1.5rem; /* py-24 px-6 */
+    background-color: rgba(231, 221, 212, 0.3); /* bg-pearl-beige/30 */
   }
-  .featured-collection__grid {
+  
+  .treasured-finds__container {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .treasured-finds__title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.25rem; /* text-4xl */
+    font-style: italic;
+    letter-spacing: -0.025em; /* tracking-tight */
+    text-align: center;
+    color: #2E2A33;
+    margin-top: 0;
+    margin-bottom: 4rem; /* mb-16 */
+    font-weight: 400;
+  }
+
+  .treasured-finds__grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-    row-gap: 40px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem; /* gap-4 */
+    row-gap: 2.5rem; /* gap-y-10 */
   }
+
   @media (min-width: 768px) {
-    .featured-collection__grid {
-      grid-template-columns: repeat(4, 1fr);
+    .treasured-finds__grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
-  .featured-collection__view-all {
+
+  .treasured-find-card {
+    background-color: #E7DDD4;
+    padding: 12px;
+    border-radius: 2px;
+    display: flex;
+    flex-direction: column;
+    text-decoration: none;
+    color: inherit;
+    box-sizing: border-box;
+  }
+
+  .treasured-find-card__img-wrapper {
+    aspect-ratio: 4/5;
+    background-color: #ece9e6;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+  }
+
+  .treasured-find-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(0.2);
+    transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .treasured-find-card:hover .treasured-find-card__image {
+    transform: scale(1.05);
+  }
+
+  .treasured-find-card__badge {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    background-color: #ffffff;
+    padding: 0.25rem 0.5rem;
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: -0.05em; /* tracking-tighter */
+    color: #2D2926;
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 500;
+    line-height: 1;
+  }
+
+  .treasured-find-card__brand {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em; /* tracking-widest */
+    color: #C8A46A; /* text-primary */
+    font-weight: 700;
+    margin: 0 0 0.25rem 0;
+  }
+
+  .treasured-find-card__title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.125rem; /* text-lg */
+    margin: 0 0 0.25rem 0;
+    font-weight: 400;
+    color: #2D2926;
+    line-height: 1.3;
+  }
+
+  .treasured-find-card__price {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem; /* text-xs */
+    color: #9B8778;
+    margin: 0;
+    font-weight: 500;
+  }
+
+  .treasured-find-card__price--compare {
+    margin-left: 0.5rem;
+    opacity: 0.5;
+    text-decoration: line-through;
+  }
+
+  .treasured-finds__view-all {
     text-align: center;
-    margin-top: 40px;
+    margin-top: 2.5rem;
   }
 </style>
 
@@ -107,7 +217,7 @@
       "type": "text",
       "id": "title",
       "label": "Section title",
-      "default": "Featured Products"
+      "default": "Treasured Finds"
     },
     {
       "type": "collection",
@@ -142,6 +252,11 @@
         },
         {
           "type": "text",
+          "id": "image_url",
+          "label": "Product image URL (Stitch mockups)"
+        },
+        {
+          "type": "text",
           "id": "badge",
           "label": "Badge text"
         },
@@ -170,7 +285,53 @@
   ],
   "presets": [
     {
-      "name": "Featured Collection"
+      "name": "Featured Collection",
+      "blocks": [
+        {
+          "type": "product",
+          "settings": {
+            "brand": "Byredo",
+            "title": "The Essence",
+            "price": "$145",
+            "compare_price": "$196",
+            "badge": "95% Full",
+            "image_url": "https://lh3.googleusercontent.com/aida-public/AB6AXuAKuuBItBe64Nsw1IwXOHp8mu2_cebm8SAtYTRzDpHdPJYUJBjThOV15_1hF-hj1z57U6lVKPcQegL9uKXYPkrt7NK7PQ1dp8EbU8U9KZHZ5tggEBaPamU6w-Cs7qIwYrm4JeSN3cc5g0z_fH7Oln-h94xKnLNxhV8c3BlqXBZy1MseeLNOuX1ItfcAI8zUABbFj5amLSf_LCcgEjMFq0r2E2peS719QXNqNjD9Nh4WZtDwj0A6rnjhnvBzt8YqH6doM7P5fL0--kE"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "brand": "Aesop",
+            "title": "Midnight Jasmine",
+            "price": "$110",
+            "compare_price": "$140",
+            "badge": "New",
+            "image_url": "https://lh3.googleusercontent.com/aida-public/AB6AXuBGRec0RkBAqG9u8-han8XUJvQqrzVTq_-D78rSpB_khHujsIRXWwZGDlbJ8b4ZrTHpQyQyR4KjyqevFXZCSr_LvyhnByOreHUrG2USmdTbO053yPG0Jna1QS6NhzKoMvqHUDz8qVvPG8ZnDY7mUl7zmYCAey3qWaSJC6M4jGebqhqIGXV1evuSj02ni_7rQ796RzG89mDXkaTlkAdA5_u8zEHO7WDJJr5J45mct1CQmegmNqF91unxgQmxmlkEPROiICFy6YXi-e4"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "brand": "Diptyque",
+            "title": "Velvet Oak",
+            "price": "$95",
+            "compare_price": "$175",
+            "badge": "80% Full",
+            "image_url": "https://lh3.googleusercontent.com/aida-public/AB6AXuBwxSO4NIhz1gWudTejn7KFklVQ5Rf25HyOa_QNW8mnNdXTlZ6cNE2rmM2i_smWdZ3oQZ5C9ip4iy1LE60fi4A-HDPdGTrCt-1oulvN78bMPK7aCvCWk4_aQzeaQfZwaRwwxTbrKDANw5wYUCXbgZd9-IHdkIG_UIWqKPfFFsXzAjvzb93NVpDq02wPFHA96GOEcPzWR1Gok67gXqZ4RZ7R75b2Ya_CEm1OVf-Dj3EHhRRDBYgGsDPetvApxaRBbZMRVSnA6EmWzjo"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "brand": "Le Labo",
+            "title": "Lunar Petals",
+            "price": "$180",
+            "compare_price": "$230",
+            "badge": "Vintage",
+            "image_url": "https://lh3.googleusercontent.com/aida-public/AB6AXuCAIIq9qLxlX8mIpQEoBynlps5kPqP4gZVW5HsxIv6_JNJ-YPPUpJBF5cN3of4sPcp858NYP7cJDawjKbljzYwgNxHvxWLQTAKtljKHsAuk-wV0qLiULhP3JPR4kBIcjA_yp0VigPwKDOdi4J-6I0wKrwmxh7j_YjsuqOBUuPbaxjeNH0Cc1aJwgwksGaLIJ3UFlBR74cBN1mzT_Q1jj4qHZJZbo5uVwbtdwcW3w_YtEsen2dpGSluSA5zI4O8Ob2luMNHFwUV8T8w"
+          }
+        }
+      ]
     }
   ]
 }

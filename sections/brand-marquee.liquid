@@ -1,102 +1,83 @@
 <style>
   @keyframes marquee {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
   }
   .brand-slider-section {
-    background-color: #F5F1EB;
-    padding: 48px 0;
+    background-color: #F5F1EB; /* bg-soft-ivory */
+    padding-top: 6rem; /* py-24 */
+    padding-bottom: 6rem;
     overflow: hidden;
-  }
-  @media (max-width: 767px) {
-    .brand-slider-section { padding: 32px 0; }
   }
   .brand-slider__heading {
     text-align: center;
-    margin-bottom: 32px;
-    padding: 0 24px;
+    margin-bottom: 3rem; /* mb-12 */
+    padding: 0 1.5rem; /* px-6 */
   }
   .brand-slider__heading h3 {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-size: 2.25rem; /* text-4xl */
     font-weight: 400;
     font-style: italic;
-    color: #2D2926;
-    letter-spacing: 0.04em;
+    color: #2E2A33; /* text-[#2E2A33] */
+    letter-spacing: -0.025em; /* tracking-tight */
     margin: 0;
-  }
-  .brand-slider__heading h3::after {
-    content: '';
-    display: block;
-    width: 48px;
-    height: 1px;
-    background: #C8A46A;
-    margin: 14px auto 0;
   }
   .brand-slider-wrapper {
     position: relative;
+    display: flex;
     overflow: hidden;
-    -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
-    mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);
   }
   .brand-slider-track {
     display: flex;
-    align-items: center;
-    gap: 40px;
+    gap: 2rem; /* gap-8 */
     width: max-content;
-    animation: marquee 35s linear infinite;
+    animation: marquee 30s linear infinite; /* animate-marquee */
     will-change: transform;
+    white-space: nowrap;
   }
   .brand-slider-section:hover .brand-slider-track {
     animation-play-state: paused;
   }
+  .brand-slider-col {
+    display: flex;
+    align-items: center;
+    gap: 2rem; /* gap-8 */
+    padding: 0 1rem; /* px-4 */
+  }
   .brand-logo-card {
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
     text-decoration: none;
     flex-shrink: 0;
-    width: 120px;
-    height: 120px;
-    background: rgba(255, 255, 255, 0.5);
-    border: 1px solid rgba(200, 164, 106, 0.18);
-    border-radius: 50%;
-    transition: transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-                box-shadow 0.35s ease,
-                border-color 0.35s ease;
+    width: 6rem; /* w-24 */
+    height: 6rem; /* h-24 */
+    background-color: #ffffff; /* bg-white */
+    border: 1px solid rgba(200, 164, 106, 0.05); /* border-primary/5 */
+    border-radius: 9999px; /* rounded-full */
+    padding: 1rem; /* p-4 */
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+    transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     cursor: pointer;
   }
   .brand-logo-card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(200, 164, 106, 0.5);
-    box-shadow: 0 6px 20px rgba(200, 164, 106, 0.12);
+    transform: scale(1.05); /* hover:scale-105 */
   }
   .brand-logo-card img {
-    display: block;
-    width: 80px;
-    height: 80px;
+    max-width: 100%;
+    max-height: 100%;
     object-fit: contain;
-    border-radius: 50%;
-    background: #fff;
-    border: 2px solid rgba(200, 164, 106, 0.15);
-    padding: 8px;
     pointer-events: none;
     user-select: none;
-    transition: transform 0.35s ease;
   }
-  .brand-logo-card:hover img {
-    transform: scale(1.05);
-  }
-  @media (max-width: 767px) {
-    .brand-logo-card {
-      width: 100px;
-      height: 100px;
-    }
-    .brand-logo-card img {
-      width: 60px;
-      height: 60px;
-      padding: 6px;
+  
+  /* Accessibility: prefers-reduced-motion fallback */
+  @media (prefers-reduced-motion: reduce) {
+    .brand-slider-track {
+      animation: none;
+      overflow-x: auto;
+      width: 100%;
     }
   }
 </style>
@@ -110,18 +91,22 @@
       {%- for i in (1..2) -%}
         {%- assign is_clone = false -%}
         {%- if i == 2 -%}{%- assign is_clone = true -%}{%- endif -%}
-        {%- for block in section.blocks -%}
-          <a href="{{ block.settings.link | default: '/collections/all' }}" 
-             class="brand-logo-card" 
-             {% if is_clone %}aria-hidden="true" tabindex="-1"{% endif %}
-             {{ block.shopify_attributes }}>
-            {%- if block.settings.logo != blank -%}
-              <img src="{{ block.settings.logo | image_url: width: 240 }}" alt="{{ block.settings.brand_name | escape }}" loading="lazy" draggable="false">
-            {%- else -%}
-              <img src="{{ block.settings.logo_file | asset_url }}" alt="{{ block.settings.brand_name | escape }}" loading="lazy" draggable="false">
-            {%- endif -%}
-          </a>
-        {%- endfor -%}
+        <div class="brand-slider-col">
+          {%- for block in section.blocks -%}
+            <a href="{{ block.settings.link | default: '/collections/all' }}" 
+               class="brand-logo-card" 
+               {% if is_clone %}aria-hidden="true" tabindex="-1"{% endif %}
+               {{ block.shopify_attributes }}>
+              {%- if block.settings.logo != blank -%}
+                <img src="{{ block.settings.logo | image_url: width: 240 }}" alt="{{ block.settings.brand_name | escape }}" loading="lazy" draggable="false">
+              {%- elsif block.settings.logo_file != blank -%}
+                <img src="{{ block.settings.logo_file | asset_url }}" alt="{{ block.settings.brand_name | escape }}" loading="lazy" draggable="false">
+              {%- else -%}
+                <span style="font-size: 10px; text-transform: uppercase; font-weight: bold; color: #2D2926;">{{ block.settings.brand_name }}</span>
+              {%- endif -%}
+            </a>
+          {%- endfor -%}
+        </div>
       {%- endfor -%}
     </div>
   </div>

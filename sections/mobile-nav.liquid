@@ -1,11 +1,19 @@
 <nav class="fixed bottom-0 left-0 right-0 bg-soft-ivory/95 border-t border-primary/10 z-50 flex justify-around items-center py-4">
   <a class="flex flex-col items-center gap-1 text-primary" href="{{ section.settings.home_link | default: '/' }}">
     <span class="material-symbols-outlined scale-90">home</span>
-    <span class="text-[9px] uppercase tracking-tighter font-semibold">{{ section.settings.home_label }}</span>
+    <span class="text-[9px] uppercase tracking-tighter font-semibold">{{ section.settings.home_label | default: "Home" }}</span>
   </a>
   <a class="flex flex-col items-center gap-1 text-charcoal/40" href="{{ section.settings.browse_link | default: '/collections/all' }}">
     <span class="material-symbols-outlined scale-90">grid_view</span>
-    <span class="text-[9px] uppercase tracking-tighter font-semibold">{{ section.settings.browse_label }}</span>
+    <span class="text-[9px] uppercase tracking-tighter font-semibold">{{ section.settings.browse_label | default: "Browse" }}</span>
+  </a>
+  <a class="flex flex-col items-center gap-1 text-charcoal/40" href="{{ section.settings.wishlist_link | default: '#' }}">
+    <span class="material-symbols-outlined scale-90">favorite</span>
+    <span class="text-[9px] uppercase tracking-tighter font-semibold">{{ section.settings.wishlist_label | default: "Wishlist" }}</span>
+  </a>
+  <a class="flex flex-col items-center gap-1 text-charcoal/40" href="{{ section.settings.profile_link | default: '/account' }}">
+    <span class="material-symbols-outlined scale-90">person</span>
+    <span class="text-[9px] uppercase tracking-tighter font-semibold">{{ section.settings.profile_label | default: "Profile" }}</span>
   </a>
 </nav>
 <div class="h-16"></div> <!-- Spacer for bottom nav -->
@@ -62,6 +70,28 @@
       "type": "url",
       "id": "browse_link",
       "label": "Browse link"
+    },
+    {
+      "type": "text",
+      "id": "wishlist_label",
+      "label": "Wishlist label",
+      "default": "Wishlist"
+    },
+    {
+      "type": "url",
+      "id": "wishlist_link",
+      "label": "Wishlist link"
+    },
+    {
+      "type": "text",
+      "id": "profile_label",
+      "label": "Profile label",
+      "default": "Profile"
+    },
+    {
+      "type": "url",
+      "id": "profile_link",
+      "label": "Profile link"
     }
   ],
   "presets": [

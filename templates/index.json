@@ -56,60 +56,40 @@
       },
       "block_order": ["brand-1","brand-2","brand-3","brand-4","brand-5","brand-6","brand-7","brand-8","brand-9","brand-10","brand-11","brand-12","brand-13","brand-14","brand-15","brand-16","brand-17","brand-18","brand-19","brand-20","brand-21","brand-22","brand-23","brand-24","brand-25","brand-26","brand-27"]
     },
-    "shop-by-gender": {
-      "type": "shop-by-gender",
+    "shop-by-occasion": {
+      "type": "shop-by-occasion",
       "settings": {
-        "accent_text": "For You",
-        "title": "Shop by Gender",
-        "subtitle": "Find fragrances crafted for your style"
+        "title": "Choose Your Mood"
       },
       "blocks": {
-        "gender-men": { "type": "gender", "settings": { "title": "Men", "icon": "male", "cta_text": "Explore", "link": "/collections/men" } },
-        "gender-women": { "type": "gender", "settings": { "title": "Women", "icon": "female", "cta_text": "Explore", "link": "/collections/women" } },
-        "gender-unisex": { "type": "gender", "settings": { "title": "Unisex", "icon": "diversity_1", "cta_text": "Explore", "link": "/collections/unisex" } }
+        "occ-1": { "type": "occasion", "settings": { "title": "Nocturnal Elegance", "link": "/collections/all" } },
+        "occ-2": { "type": "occasion", "settings": { "title": "Morning Dew", "link": "/collections/all" } },
+        "occ-3": { "type": "occasion", "settings": { "title": "Stately Library", "link": "/collections/all" } }
       },
-      "block_order": ["gender-men","gender-women","gender-unisex"]
+      "block_order": ["occ-1","occ-2","occ-3"]
     },
     "featured-products": {
       "type": "featured-collection",
       "settings": {
         "accent_text": "Top Picks",
-        "title": "Best Sellers",
+        "title": "Treasured Finds",
         "collection": "all",
         "products_to_show": 4,
         "show_view_all": true
-      }
-    },
-    "latest-arrivals": {
-      "type": "featured-collection",
-      "settings": {
-        "accent_text": "New In",
-        "title": "Latest Arrivals",
-        "collection": "all",
-        "products_to_show": 4,
-        "show_view_all": true
-      }
-    },
-    "recently-viewed": {
-      "type": "recently-viewed",
-      "settings": {
-        "accent_text": "Your History",
-        "title": "Recently Viewed",
-        "products_to_show": 4
       }
     },
     "testimonials": {
       "type": "testimonials",
       "settings": {
-        "quote": "I finally found my signature scent at a price that made sense. Fast delivery and exactly as described — couldn't be happier.",
-        "attribution": "Sara M., Cairo"
+        "quote": "Finding my signature Byredo scent at half the retail price felt like discovering a secret garden. The authentication process gave me peace of mind.",
+        "attribution": "Elena V., Paris"
       }
     },
     "email-signup": {
       "type": "email-signup",
       "settings": {
-        "title": "Be the First to Know",
-        "subtitle": "New arrivals, exclusive drops, and offers — straight to your inbox.",
+        "title": "Join the Inner Circle",
+        "subtitle": "Be the first to hear about new archival drops and limited vintages.",
         "placeholder": "Your email address",
         "button_text": "Subscribe"
       }
@@ -123,13 +103,10 @@
     }
   },
   "order": [
-
     "hero",
     "brand-marquee",
-    "shop-by-gender",
     "featured-products",
-    "latest-arrivals",
-    "recently-viewed",
+    "shop-by-occasion",
     "testimonials",
     "email-signup",
     "mobile-bottom-nav"
