@@ -66,24 +66,24 @@
         "occ-1": {
           "type": "occasion",
           "settings": {
-            "title": "Nocturnal Elegance",
-            "image_url": "https://lh3.googleusercontent.com/aida-public/AB6AXuARWfskKgPpyEHUTa6AdjZ-CblER4KbjKmCp2fTETayY2bP0pe8pqwFJn9O5OlQXxy-AnvsIWXd35z0GTIbvuSNYeCreFzqUjbLRea5izB5-mFLQ64x5Q6PsAl17pTKBdeBt0zkje__LCGefehy7fgDESy8NPisx9Q9CBGQrAwSMhrX0oWyWFb5sW3z6XO2g9kp-yGbdVlhVpOehsaAH-y8vnO2NgyNSMGmfLT6vnRlrA0mB3lz8RdEqKt1mCdKi5pQ9HrgJIP7OM8",
+            "title": "Unisex",
+            "image_url": "https://lh3.googleusercontent.com/aida/ADBb0uihj-VaoUIDnCMzKxoyRaBxwfCB2yxuNh4Ca8__m5Zq4tTiFVn1sZCzjDuoWjFnf1dHTZYfvU0r7DuDPf9aLVo-rdOwWFMi_mu7jyNTVsWJw7asZnNoR5aUB72w2L0sFBKSlSpm5lLzCf6lk17C5z_wqKDmGiP2EcamQhcyae-dVzS8hLbqHeidunyKiraQKBhZ3wAP7haq7ABWt1DjSUKgkVAJ-jpZIbVqEwz5WFUMLvxDy-zHFF4AvA2WGmAvViGLlr8fn0lavg",
             "link": "#"
           }
         },
         "occ-2": {
           "type": "occasion",
           "settings": {
-            "title": "Morning Dew",
-            "image_url": "https://lh3.googleusercontent.com/aida-public/AB6AXuD5nEiahWYsgWFVJ8JFLwTryKNdn3IN7i0b-nDPivLw-ZFNUcwdDiXcHOrpTKU6VwDgGm1dEeSPoQwUXJFed28JvDmw1dBHWOK6IAW-9in6-DAG925gW8p2OICW3nrGARmVcPSR3cEpdhIn7JNFSRZz0t9KHFMybP24tudnFrqDYNc3lATnivUGP_6tA6Z_23m4N-02pXG6OkcjNdH_R6NuPqMAH_lACc1xWRzByqfQeu_v1-57vLZV72HskdABCjTQdCUz7p6bNGQ",
+            "title": "Men",
+            "image_url": "https://lh3.googleusercontent.com/aida/ADBb0uh-rP-F3Tgib7Nb1QmPfF8Eqz24kqzuWS1XJDuw0BKlMqhfC6FEEP2i7nrVLWpx0O0kif2PnfwwPZ5YtlLGCcrmsGfG8x9VU-SFIE9-pUTeJ-ZqX_Thes9uiIgP5vLZNEifPpgyvYIrqpe1TYMZeV0XXrPtjbkSxy3Zh9Xqfz9USFTYSNc4TRo-CZsnxvGkE_FXAtb_QEnb2ZDVxMPz6eWzDLRV6v_WxVItabPgASGt8bj0TOwK7WZqNA6bhk0l6nzplSwUvmluSg",
             "link": "#"
           }
         },
         "occ-3": {
           "type": "occasion",
           "settings": {
-            "title": "Stately Library",
-            "image_url": "https://lh3.googleusercontent.com/aida-public/AB6AXuCbeAWPnneM1hdAEzF309vzojdLpoJdhra8OI8KsCmYTMs0DsQvcEOfUv1kfHAikKbI_yAsGBM4khKB6X7SipZnVHgwQJM_aP0toJL027GDIvJF9LqCmRaqYQYpiY1CI3P5T_LuXADkrVRG9h2cPQ2qoZe-Vmi7tR1j1BPIX1BGId9BHAbV8m_jY2ta0ryB9sQnACitCYYbb6OKXXNpq1G1iEXVIKl310lhsGDN4vka9VlfFJlvp-2JQfPcMEK6Cm1ukgzd939h8vE",
+            "title": "Women",
+            "image_url": "https://lh3.googleusercontent.com/aida/ADBb0uigq1OmCuY0vlhwXw4g2Hq5Pdzg6iNjk0up0J1BfixlVSKzshkbWn4iSo1KHYRrQjgYPuMTl5fDLGgAmv2tEyxBJRRBLSU4uiI2Y3zeGHQzw_ePt_hwqlQqZC-K0c0q8QtkkPj6bvnP2jty-DqNAhegiFxeXHE4rkZttTjHQoGWhk74pt4o07Qt02N2bAtXFws2ps8YAdmNJSIzc0EKuhgfxF2m8WVg7PhYt2AQ5odcQNTcO5BxUQjy51NdOg648jWXGdOsAlCsmg",
             "link": "#"
           }
         }
