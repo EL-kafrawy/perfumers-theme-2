@@ -35,6 +35,12 @@
         "type": "text",
         "id": "favicon_url",
         "label": "Favicon URL"
+      },
+      {
+        "type": "checkbox",
+        "id": "whatsapp_float_enabled",
+        "label": "Enable WhatsApp Floating Button",
+        "default": true
       }
     ]
   },

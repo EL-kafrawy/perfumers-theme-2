@@ -37,12 +37,7 @@
         <span class="product-card__badge product-card__badge--new">{{ 'product.best_seller' | t }}</span>
       {%- endif -%}
 
-      <!-- Quick View Button -->
-      <div class="qv-overlay">
-        <button class="qv-btn" data-handle="{{ product.handle }}">
-          QUICK VIEW
-        </button>
-      </div>
+
 
       <button class="quick-add-btn" data-product-id="{{ product.id }}">+ ADD</button>
     </div>
@@ -117,37 +112,5 @@
   .product-card__image-wrapper {
     position: relative;
   }
-  .qv-overlay {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    padding-bottom: 48px;
-    opacity: 0;
-    transition: opacity 0.2s;
-    pointer-events: none;
-    z-index: 2;
-  }
-  .product-card:hover .qv-overlay {
-    opacity: 1;
-    pointer-events: all;
-  }
-  .qv-btn {
-    background: #fff;
-    color: #1a1a1a;
-    border: none;
-    padding: 8px 20px;
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    border-radius: 4px;
-    cursor: pointer;
-    pointer-events: all;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    transition: background 0.2s;
-  }
-  .qv-btn:hover {
-    background: #f0f0f0;
-  }
+
 </style>
