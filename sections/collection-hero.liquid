@@ -9,6 +9,11 @@
   {%- endif -%}
 {%- endif -%}
 
+{%- assign show_overlay_and_text = true -%}
+{%- if collection.handle == 'unisex' or collection.handle == 'men' or collection.handle == 'women' -%}
+  {%- assign show_overlay_and_text = false -%}
+{%- endif -%}
+
 <section class="collection-hero section--flush" data-section-id="{{ section.id }}">
   <div class="collection-hero__wrapper">
     {%- if collection_image != blank -%}
@@ -28,17 +33,20 @@
     {%- else -%}
       <div class="collection-hero__image collection-hero__placeholder"></div>
     {%- endif -%}
-    <div class="collection-hero__overlay"></div>
-    <div class="collection-hero__content">
-      <div class="container">
-        {% render 'breadcrumb' %}
-        <h1 class="collection-hero__title">{{ collection.title }}</h1>
-        {%- if collection.description != blank -%}
-          <p class="collection-hero__description">{{ collection.description | strip_html | truncate: 160 }}</p>
-        {%- endif -%}
-        <p class="collection-hero__count">{{ collection.products_count }} {{ 'collection.products_count' | t: count: collection.products_count }}</p>
+    
+    {%- if show_overlay_and_text -%}
+      <div class="collection-hero__overlay"></div>
+      <div class="collection-hero__content">
+        <div class="container">
+          {% render 'breadcrumb' %}
+          <h1 class="collection-hero__title">{{ collection.title }}</h1>
+          {%- if collection.description != blank -%}
+            <p class="collection-hero__description">{{ collection.description | strip_html | truncate: 160 }}</p>
+          {%- endif -%}
+          <p class="collection-hero__count">{{ collection.products_count }} {{ 'collection.products_count' | t: count: collection.products_count }}</p>
+        </div>
       </div>
-    </div>
+    {%- endif -%}
   </div>
 </section>
 
