@@ -142,14 +142,18 @@
   <!-- Recently Viewed Tracker -->
   <script>
   (function(){
-    if(window.location.pathname.includes('/products/')){
-      var handle = window.location.pathname.split('/products/')[1].split('?')[0].split('#')[0];
-      if(!handle) return;
-      var viewed = JSON.parse(localStorage.getItem('pf_rv') || '[]');
-      viewed = viewed.filter(function(h){ return h !== handle; });
-      viewed.unshift(handle);
-      if(viewed.length > 8) viewed = viewed.slice(0,8);
-      localStorage.setItem('pf_rv', JSON.stringify(viewed));
+    try {
+      if(window.location.pathname.includes('/products/')){
+        var handle = window.location.pathname.split('/products/')[1].split('?')[0].split('#')[0];
+        if(!handle) return;
+        var viewed = JSON.parse(localStorage.getItem('pf_rv') || '[]');
+        viewed = viewed.filter(function(h){ return h !== handle; });
+        viewed.unshift(handle);
+        if(viewed.length > 8) viewed = viewed.slice(0,8);
+        localStorage.setItem('pf_rv', JSON.stringify(viewed));
+      }
+    } catch(e) {
+      console.warn("Storage access denied for recently viewed tracker:", e);
     }
   })();
   </script>
@@ -164,32 +168,54 @@
 
   <script>
   document.addEventListener('click', function(e){
-    var btn = e.target.closest('.qv-btn');
-    if(!btn) return;
-    e.preventDefault();
-    e.stopPropagation();
-    var handle = btn.getAttribute('data-handle');
-    var modal = document.getElementById('qv-modal');
-    var content = document.getElementById('qv-content');
-    content.innerHTML = '<p style="text-align:center;padding:40px 0;color:#999;">Loading...</p>';
-    modal.style.display = 'flex';
-    fetch('/products/'+handle+'.js')
-      .then(function(r){ return r.json(); })
-      .then(function(p){
-        var priceFormatted = (p.price / 100).toLocaleString('en-EG', {minimumFractionDigits: 2}) + ' EGP';
-        var desc = p.body_html ? p.body_html.replace(/<[^>]*>/g,'').substring(0,200) + '...' : '';
-        content.innerHTML =
-          '<img src="'+p.featured_image+'" alt="'+p.title.replace(/"/g,'&quot;')+'" style="width:100%;border-radius:8px;margin-bottom:16px;" loading="lazy">'+
-          '<h2 style="font-size:18px;margin-bottom:8px;font-family:\'Montserrat\',sans-serif;">'+p.title+'</h2>'+
-          '<p style="font-size:16px;font-weight:700;margin-bottom:12px;color:#C8A46A;">'+priceFormatted+'</p>'+
-          '<p style="font-size:13px;color:#666;margin-bottom:20px;line-height:1.6;">'+desc+'</p>'+
-          '<a href="/products/'+p.handle+'" style="display:block;background:#1a1a1a;color:#fff;text-align:center;padding:12px;border-radius:6px;font-size:13px;font-weight:700;letter-spacing:0.08em;text-decoration:none;">VIEW FULL DETAILS</a>'+
-          '<a href="/cart/add?id='+p.variants[0].id+'&quantity=1" style="display:block;background:#fff;color:#1a1a1a;border:1px solid #1a1a1a;text-align:center;padding:12px;border-radius:6px;font-size:13px;font-weight:700;letter-spacing:0.08em;text-decoration:none;margin-top:8px;">ADD TO CART</a>';
-      });
+    try {
+      var btn = e.target.closest('.qv-btn');
+      if(!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      var handle = btn.getAttribute('data-handle');
+      var modal = document.getElementById('qv-modal');
+      var content = document.getElementById('qv-content');
+      if (!modal || !content) return;
+      content.innerHTML = '<p style="text-align:center;padding:40px 0;color:#999;">Loading...</p>';
+      modal.style.display = 'flex';
+      fetch('/products/'+handle+'.js')
+        .then(function(r){ return r.json(); })
+        .then(function(p){
+          try {
+            if (!p || !p.variants || p.variants.length === 0) {
+              content.innerHTML = '<p style="text-align:center;padding:40px 0;color:#999;">Product unavailable</p>';
+              return;
+            }
+            var priceFormatted = (p.price / 100).toLocaleString('en-EG', {minimumFractionDigits: 2}) + ' EGP';
+            var desc = p.body_html ? p.body_html.replace(/<[^>]*>/g,'').substring(0,200) + '...' : '';
+            content.innerHTML =
+              '<img src="'+p.featured_image+'" alt="'+p.title.replace(/"/g,'&quot;')+'" style="width:100%;border-radius:8px;margin-bottom:16px;" loading="lazy">'+
+              '<h2 style="font-size:18px;margin-bottom:8px;font-family:\'Montserrat\',sans-serif;">'+p.title+'</h2>'+
+              '<p style="font-size:16px;font-weight:700;margin-bottom:12px;color:#C8A46A;">'+priceFormatted+'</p>'+
+              '<p style="font-size:13px;color:#666;margin-bottom:20px;line-height:1.6;">'+desc+'</p>'+
+              '<a href="/products/'+p.handle+'" style="display:block;background:#1a1a1a;color:#fff;text-align:center;padding:12px;border-radius:6px;font-size:13px;font-weight:700;letter-spacing:0.08em;text-decoration:none;">VIEW FULL DETAILS</a>'+
+              '<a href="/cart/add?id='+p.variants[0].id+'&quantity=1" style="display:block;background:#fff;color:#1a1a1a;border:1px solid #1a1a1a;text-align:center;padding:12px;border-radius:6px;font-size:13px;font-weight:700;letter-spacing:0.08em;text-decoration:none;margin-top:8px;">ADD TO CART</a>';
+          } catch(err) {
+            console.error('Error rendering quick view content:', err);
+            content.innerHTML = '<p style="text-align:center;padding:40px 0;color:#999;">Error loading details</p>';
+          }
+        })
+        .catch(function(err){
+          console.error('Error fetching quick view details:', err);
+          content.innerHTML = '<p style="text-align:center;padding:40px 0;color:#999;">Error loading details</p>';
+        });
+    } catch(err) {
+      console.error('Error in quick view click handler:', err);
+    }
   });
-  document.getElementById('qv-modal').addEventListener('click', function(e){
-    if(e.target === this) this.style.display = 'none';
-  });
+  
+  var qvModal = document.getElementById('qv-modal');
+  if (qvModal) {
+    qvModal.addEventListener('click', function(e){
+      if(e.target === this) this.style.display = 'none';
+    });
+  }
   </script>
 
   <!-- WhatsApp Floating Button -->
