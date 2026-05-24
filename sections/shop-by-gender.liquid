@@ -40,7 +40,23 @@
 
   <div class="sbg-grid">
     {%- for block in section.blocks -%}
-      <a href="{{ block.settings.link | default: '#' }}" class="sbg-card" {{ block.shopify_attributes }}>
+      {%- assign target_url = "#" -%}
+      {%- if block.settings.collection != blank -%}
+        {%- assign target_collection = block.settings.collection -%}
+        {%- if target_collection.url != blank -%}
+          {%- assign target_url = target_collection.url -%}
+        {%- else -%}
+          {%- assign target_url = collections[target_collection].url -%}
+        {%- endif -%}
+      {%- elsif block.settings.link != blank and block.settings.link != "#" -%}
+        {%- assign target_url = block.settings.link -%}
+      {%- else -%}
+        {%- if block.settings.title != blank -%}
+          {%- assign handle = block.settings.title | handleize -%}
+          {%- assign target_url = '/collections/' | append: handle -%}
+        {%- endif -%}
+      {%- endif -%}
+      <a href="{{ target_url }}" class="sbg-card" {{ block.shopify_attributes }}>
         <div class="sbg-card-inner">
           <div class="sbg-icon-wrap">
             <span class="material-symbols-outlined sbg-icon">{{ block.settings.icon }}</span>
@@ -103,6 +119,11 @@
           "id": "cta_text",
           "label": "CTA text",
           "default": "Explore"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Select Collection"
         },
         {
           "type": "url",

@@ -245,8 +245,12 @@
     };
 
     /* Initialize */
-    document.addEventListener('DOMContentLoaded', function () {
+    if (document.readyState !== 'loading') {
         new CollectionFilter();
-    });
+    } else {
+        document.addEventListener('DOMContentLoaded', function () {
+            new CollectionFilter();
+        });
+    }
 
 })();

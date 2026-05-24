@@ -7,7 +7,7 @@
     var selectors = {
         drawer: '[data-cart-drawer]',
         overlay: '[data-cart-overlay]',
-        openBtn: '[data-cart-open]',
+        openBtn: '[data-cart-open], [data-drawer-open="cart"]',
         closeBtn: '[data-cart-close]',
         itemRemove: '[data-cart-remove]',
         itemQtyInput: '[data-cart-qty]',
@@ -231,12 +231,18 @@
     };
 
     /* Initialize */
-    document.addEventListener('DOMContentLoaded', function () {
+    function initCartDrawer() {
         var cd = new CartDrawer();
         var drawer = document.querySelector(selectors.drawer);
         if (drawer) {
             drawer.__cartDrawer = cd;
         }
-    });
+    }
+
+    if (document.readyState !== 'loading') {
+        initCartDrawer();
+    } else {
+        document.addEventListener('DOMContentLoaded', initCartDrawer);
+    }
 
 })();

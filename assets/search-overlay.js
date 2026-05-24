@@ -169,8 +169,12 @@
     };
 
     /* Initialize */
-    document.addEventListener('DOMContentLoaded', function () {
+    if (document.readyState !== 'loading') {
         new SearchOverlay();
-    });
+    } else {
+        document.addEventListener('DOMContentLoaded', function () {
+            new SearchOverlay();
+        });
+    }
 
 })();

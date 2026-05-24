@@ -10,9 +10,13 @@
     initSection(section);
   });
 
-  document.addEventListener('DOMContentLoaded', function() {
+  if (document.readyState !== 'loading') {
     initTheme();
-  });
+  } else {
+    document.addEventListener('DOMContentLoaded', function() {
+      initTheme();
+    });
+  }
 
   function initTheme() {
     initLazyImages();

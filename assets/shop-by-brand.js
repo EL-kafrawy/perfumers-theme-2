@@ -5,7 +5,11 @@
 (function () {
   'use strict';
 
-  document.addEventListener('DOMContentLoaded', init);
+  if (document.readyState !== 'loading') {
+    init();
+  } else {
+    document.addEventListener('DOMContentLoaded', init);
+  }
 
   function init() {
     document.querySelectorAll('[data-brand-carousel]').forEach(function (root) {

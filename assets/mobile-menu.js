@@ -7,7 +7,7 @@
     var selectors = {
         menu: '[data-mobile-menu]',
         overlay: '[data-mobile-menu-overlay]',
-        openBtn: '[data-mobile-menu-open]',
+        openBtn: '[data-mobile-menu-open], [data-drawer-open="mobile-menu"]',
         closeBtn: '[data-mobile-menu-close]',
         submenuTrigger: '[data-submenu-trigger]',
         submenuBack: '[data-submenu-back]',
@@ -113,8 +113,12 @@
     };
 
     /* Initialize */
-    document.addEventListener('DOMContentLoaded', function () {
+    if (document.readyState !== 'loading') {
         new MobileMenu();
-    });
+    } else {
+        document.addEventListener('DOMContentLoaded', function () {
+            new MobileMenu();
+        });
+    }
 
 })();
